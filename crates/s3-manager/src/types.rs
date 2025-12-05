@@ -12,7 +12,7 @@ pub enum ObjectType {
 impl ObjectType {
     pub fn to_s3_path(&self, entity_id: &str) -> String {
         match self {
-            ObjectType::DriverMonthlyWorkdayReport => format!("driver_monthly_workday_reports/{}", entity_id),
+            ObjectType::DriverMonthlyWorkdayReport => format!("drivers/{}/monthly_workday_reports", entity_id),
         }
     }
 }
