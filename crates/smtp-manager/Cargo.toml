@@ -1,0 +1,9 @@
+[package]
+name = "smtp-manager"
+version = "0.1.0"
+edition = "2024"
+description = "SMTP Manager for handling SMTP operations in Plannify applications"
+authors = ["Baptiste Bronsin <baptiste.bronsin@outlook.com>"]
+license = "Apache-2.0"
+
+[dependencies]
