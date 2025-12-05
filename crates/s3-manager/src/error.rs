@@ -1,5 +1,5 @@
-use thiserror::Error;
 use aws_sdk_s3::Error as AwsError;
+use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum S3Error {

@@ -11,14 +11,12 @@ impl S3Client {
         let bucket = &self.config.bucket_name;
         let body = aws_sdk_s3::primitives::ByteStream::from(content.to_vec());
 
-        let request = self
-            .inner
-            .put_object()
-            .bucket(bucket)
-            .key(&key)
-            .body(body);
+        let request = self.inner.put_object().bucket(bucket).key(&key).body(body);
 
-        let result = request.send().await.map_err(|e| S3Error::from(aws_sdk_s3::Error::from(e)))?;
+        let result = request
+            .send()
+            .await
+            .map_err(|e| S3Error::from(aws_sdk_s3::Error::from(e)))?;
 
         Ok(ObjectMetadata {
             key,
