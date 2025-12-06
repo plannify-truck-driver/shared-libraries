@@ -9,15 +9,16 @@ pub struct S3Config {
 
 impl S3Config {
     pub fn default(
+        endpoint: impl Into<String>,
         bucket: impl Into<String>,
-        region: impl Into<String>,
+        region: Option<impl Into<String>>,
         access_key: impl Into<String>,
         secret_key: impl Into<String>,
     ) -> Self {
         Self {
-            endpoint: String::new(),
+            endpoint: endpoint.into(),
             bucket_name: bucket.into(),
-            region: Some(region.into()),
+            region: region.map(|r| r.into()),
             access_key: access_key.into(),
             secret_key: secret_key.into(),
         }
