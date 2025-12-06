@@ -1,7 +1,6 @@
 use crate::{config::S3Config, error::S3Error};
-use aws_config::meta::region::RegionProviderChain;
-use aws_sdk_s3::Client;
-use aws_sdk_s3::config::Region;
+use aws_config::BehaviorVersion;
+use aws_sdk_s3::{Client, config::Credentials};
 
 #[derive(Debug, Clone)]
 pub struct S3Client {
@@ -11,15 +10,28 @@ pub struct S3Client {
 
 impl S3Client {
     pub async fn new(config: S3Config) -> Result<Self, S3Error> {
-        let region_provider =
-            RegionProviderChain::default_provider().or_else(Region::new(config.region.clone()));
+        let credentials = Credentials::new(
+            config.access_key.clone(),
+            config.secret_key.clone(),
+            None,
+            None,
+            "plannify",
+        );
 
-        let sdk_config = aws_config::defaults(aws_config::BehaviorVersion::latest())
-            .region(region_provider)
-            .load()
-            .await;
+        let s3_config = aws_sdk_s3::config::Builder::new()
+            .credentials_provider(credentials)
+            .endpoint_url(config.endpoint.to_string())
+            .behavior_version(BehaviorVersion::latest())
+            .region(aws_sdk_s3::config::Region::new(
+                config
+                    .region
+                    .clone()
+                    .unwrap_or_else(|| "plannify-region".to_string()),
+            ))
+            .build();
 
-        let client = Client::new(&sdk_config);
+        let client = aws_sdk_s3::Client::from_conf(s3_config);
+
         Ok(Self {
             inner: client,
             config,
